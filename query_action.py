@@ -28,19 +28,20 @@ class DatabaseSearch:
 
         try:
             self.es = Elasticsearch(
-                "https://my-elasticsearch-project-e8b084.es.us-east-1.aws.elastic.cloud:443",
-                api_key="eld0RmVKUUI5LUtzQm51ZlJ1Sy06TVdOREExV2dRWWlDdGgxTjZuSHFKZw==",
+                "https://bd92e28d7a184012bfccad087eb26284.us-central1.gcp.cloud.es.io:443",
+                api_key="T1dRX3FaVUJlWWRSUzFyUlJOeDQ6eWJxQXJGZUFTdnV4RHdKcFpIVVlDZw==",
                 verify_certs=True,
             )
 
             if not self.es.ping():
-                st.error("Elasticsearch 서버에 연결할 수 없습니다.")
-                raise ConnectionError("Elasticsearch 서버에 연결할 수 없습니다.")
-            # st.success("Elastic Cloud 연결 성공!")
+                print(
+                    "경고: Elasticsearch 서버에 연결할 수 없습니다. 일부 기능이 제한될 수 있습니다."
+                )
+            else:
+                print("Elasticsearch 연결 성공!")
 
         except Exception as e:
-            st.error(f"Elasticsearch 연결 실패: {e}")
-            raise
+            print(f"Elasticsearch 연결 오류: {e}")
 
     def create_es_index(self):
         """Elasticsearch 인덱스 생성"""
@@ -602,3 +603,8 @@ class NewsChatbot:
                 print(f"   URL: {article['url']}")
                 print(f"   발행일: {article.get('published_date', '날짜 정보 없음')}")
         print("")
+
+
+if __name__ == "__main__":
+    db = DatabaseSearch()
+    db.sync_mongodb_to_elasticsearch()  # 이 부분 실행 전 ES 연결 확인
